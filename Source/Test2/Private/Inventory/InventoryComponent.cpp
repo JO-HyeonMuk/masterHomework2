@@ -1,5 +1,6 @@
 ﻿#include "Inventory/InventoryComponent.h"
 #include "GameFramework/Character.h"
+#include "ItemData/Weapon/Shotgun.h"
 #include "ItemData/Weapon/WeaponBase.h"
 
 UInventoryComponent::UInventoryComponent()
@@ -37,10 +38,8 @@ void UInventoryComponent::EquipItem(int32 SlotIndex)
 	SpawnParams.Owner = OwnerCharacter;
 	SpawnParams.Instigator = OwnerCharacter;
 	
-	AWeaponBase* NewWeapon = GetWorld()->SpawnActor<AWeaponBase>(AWeaponBase::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	AShotgun* NewWeapon = GetWorld()->SpawnActor<AShotgun>(AShotgun::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 
-	SpawnedWeaponActor = NewWeapon;
-	
 	if (NewWeapon)
 	{
 		NewWeapon->InitializeWeapon(Items[SlotIndex]);
@@ -48,6 +47,9 @@ void UInventoryComponent::EquipItem(int32 SlotIndex)
 		NewWeapon->AttachToComponent(OwnerCharacter->GetMesh(), 
 			FAttachmentTransformRules::SnapToTargetIncludingScale, 
 			TEXT("hand_r"));
+        
+		CurrentEquippedWeapon = Items[SlotIndex];
+		SpawnedWeaponActor = NewWeapon;
 	}
 }
 

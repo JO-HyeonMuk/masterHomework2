@@ -66,6 +66,18 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* FireAction;
+	
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* AimAction;
+	
+	void StartAim();
+	void StopAim();
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Camera")
+	float AimFOV = 60.0f;
+
+	float DefaultFOV;
+	bool bIsAiming = false;
 
 	void OnFire();
 	void BeginPlay();
