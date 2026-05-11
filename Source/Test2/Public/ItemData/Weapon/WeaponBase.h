@@ -13,7 +13,9 @@ class TEST2_API AWeaponBase : public AActor
     
 public:    
 	AWeaponBase();
-
+	
+	float DefaultSpreadAngle;
+	
 	// 템플릿 메서드 (최종 호출되는 함수, 자식 클래스에서 오버라이드 불가)
 	void Fire();
 

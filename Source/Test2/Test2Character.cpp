@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "FireDamageType.h"
 #include "InputActionValue.h"
+#include "MyHealthComponent.h"
 #include "Inventory/InventoryComponent.h"
 #include "ItemData/Weapon/WeaponBase.h"
 
@@ -46,10 +47,12 @@ ATest2Character::ATest2Character()
 	FollowCamera->bUsePawnControlRotation = false;
 	
 	InventoryComp = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComp"));
+	
+	HealthComp = CreateDefaultSubobject<UMyHealthComponent>(TEXT("HealthComp"));
 
 }
 
-float ATest2Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+/*float ATest2Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
@@ -68,7 +71,7 @@ float ATest2Character::TakeDamage(float DamageAmount, FDamageEvent const& Damage
 	}
 
 	return ActualDamage;
-}
+}*/
 
 
 void ATest2Character::NotifyControllerChanged()
@@ -86,7 +89,8 @@ void ATest2Character::NotifyControllerChanged()
 
 void ATest2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 
@@ -98,6 +102,9 @@ void ATest2Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATest2Character::Look);
 		
 		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ATest2Character::OnFire);
+		
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Started, this, &ATest2Character::StartAim);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Completed, this, &ATest2Character::StopAim);
 	}
 	else
 	{
@@ -142,13 +149,67 @@ void ATest2Character::OnFire()
 	}
 }
 
+void ATest2Character::HandleDeath(AController* InstigatorController)
+{
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		DisableInput(PC);
+	}
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+}
+
+void ATest2Character::StartAim()
+{
+	bIsAiming = true;
+	if (FollowCamera)
+	{
+		// FOV를 좁혀 줌인 효과 부여
+		FollowCamera->SetFieldOfView(AimFOV);
+	}
+	
+	if (InventoryComp && InventoryComp->SpawnedWeaponActor)
+	{
+		InventoryComp->SpawnedWeaponActor->WeaponData->SpreadAngle = 2.0f; 
+	}
+}
+
+void ATest2Character::StopAim()
+{
+	bIsAiming = false;
+	if (FollowCamera)
+	{
+		// 원래 FOV로 복구
+		FollowCamera->SetFieldOfView(DefaultFOV);
+	}
+	
+	if (InventoryComp && InventoryComp->SpawnedWeaponActor)
+	{
+		InventoryComp->SpawnedWeaponActor->WeaponData->SpreadAngle = 
+			InventoryComp->SpawnedWeaponActor->DefaultSpreadAngle;
+	}
+}
+
 void ATest2Character::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (FollowCamera)
+	{
+		DefaultFOV = FollowCamera->FieldOfView;
+	}
 
 	if (InventoryComp && TestWeaponData)
 	{
 		InventoryComp->AddItem(TestWeaponData); // 인벤토리에 추가
 		InventoryComp->EquipItem(0);           // 0번 슬롯 무기 바로 장착
+	}
+	
+	if (HealthComp)
+	{
+		HealthComp->OnHealthDead.AddDynamic(this, &ATest2Character::HandleDeath);
 	}
 }

@@ -51,7 +51,7 @@ class ATest2Character : public ACharacter
 public:
 	ATest2Character();
 
-	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
+	//float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UInventoryComponent* InventoryComp;
@@ -69,6 +69,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* AimAction;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UMyHealthComponent* HealthComp;
+	
+	UFUNCTION()
+	void HandleDeath(AController* InstigatorController);
 	
 	void StartAim();
 	void StopAim();

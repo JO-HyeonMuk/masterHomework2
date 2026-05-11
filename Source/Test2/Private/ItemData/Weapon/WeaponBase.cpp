@@ -19,6 +19,8 @@ void AWeaponBase::InitializeWeapon(UItemData* InData)
 	{
 		WeaponMesh->SetStaticMesh(WeaponData->ItemMesh);
 		WeaponMesh->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));
+		
+		DefaultSpreadAngle = WeaponData->SpreadAngle;
 	}
 }
 
