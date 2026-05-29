@@ -11,6 +11,7 @@
 #include "FireDamageType.h"
 #include "InputActionValue.h"
 #include "MyHealthComponent.h"
+#include "Component/QuestComponent.h"
 #include "Inventory/InventoryComponent.h"
 #include "ItemData/Weapon/WeaponBase.h"
 
@@ -49,6 +50,8 @@ ATest2Character::ATest2Character()
 	InventoryComp = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComp"));
 	
 	HealthComp = CreateDefaultSubobject<UMyHealthComponent>(TEXT("HealthComp"));
+	
+	QuestComp = CreateDefaultSubobject<UQuestComponent>(TEXT("QuestComp"));
 
 }
 

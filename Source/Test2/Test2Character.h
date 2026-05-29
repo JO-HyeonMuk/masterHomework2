@@ -73,6 +73,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UMyHealthComponent* HealthComp;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UQuestComponent* QuestComp;
+	
 	UFUNCTION()
 	void HandleDeath(AController* InstigatorController);
 	
