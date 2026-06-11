@@ -54,7 +54,7 @@ void ATestActor::OnAsyncTraceCompleted(const FTraceHandle& Handle, FTraceDatum& 
 	for (const FHitResult& Hit : Data.OutHits)
 	{
 		AActor* HitActor = Hit.GetActor();
-		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Green, FString::Printf(TEXT("Multi Hit Actor : %s"), *HitActor->GetName()));
+		//GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Green, FString::Printf(TEXT("Multi Hit Actor : %s"), *HitActor->GetName()));
 		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 20.f, 12, FColor::Green, false, 2.f);
 
 		UGameplayStatics::ApplyPointDamage(

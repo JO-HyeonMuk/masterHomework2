@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "PooledObject.generated.h"
 
+class UMyObjectPoolSubsystem;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class TEST2_API UPooledObject : public UActorComponent
@@ -13,15 +14,17 @@ class TEST2_API UPooledObject : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this component's properties
-	UPooledObject();
+	void Init(UMyObjectPoolSubsystem* Owner);
+	
+	UFUNCTION(BlueprintCallable, Category = "Object Pool")
+	void RecycleSelf();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Object Pool")
+	bool bIsPoolActive;
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
+private:
+	UPROPERTY()
+	TObjectPtr<class UMyObjectPoolSubsystem> ObjectPool;
+    
+	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 };

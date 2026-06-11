@@ -3,13 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PooledObjectData.generated.h"
 
-/**
- * 
- */
-class TEST2_API PooledObjectData
+USTRUCT(BlueprintType)
+struct FPooledObjectData
 {
-public:
-	PooledObjectData();
-	~PooledObjectData();
+	GENERATED_BODY()
+	
+	FPooledObjectData()
+	{
+		ActorTemplate = nullptr;
+		PoolSize = 1;
+		bCanGrow = false;
+		ActorName = "default";
+	}
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Object Pool")
+	TSubclassOf<AActor> ActorTemplate;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Object Pool")
+	int32 PoolSize;
+    
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Object Pool")
+	bool bCanGrow;
+    
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Object Pool")
+	FString ActorName;
 };

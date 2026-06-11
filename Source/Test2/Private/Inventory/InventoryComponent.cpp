@@ -17,7 +17,7 @@ void UInventoryComponent::AddItem(UItemData* NewItem)
 	{
 		Items.Add(NewItem);
 		
-		UE_LOG(LogTemp, Warning, TEXT("아이템 획득: %s"), *NewItem->ItemName.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("아이템 획득: %s"), *NewItem->ItemName.ToString());
 		
 	}
 }

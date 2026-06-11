@@ -53,7 +53,7 @@ void AEnemyCharacter::OnTraceCompleted(const FTraceHandle& Handle, FTraceDatum& 
 		AActor* HitActor = Datum.OutHits[0].GetActor();
 		if (HitActor && HitActor->ActorHasTag(TEXT("Player")))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("플레이어 발견!"));
+			//UE_LOG(LogTemp, Warning, TEXT("플레이어 발견!"));
 		}
 	}
 }
